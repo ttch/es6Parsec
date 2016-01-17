@@ -1,23 +1,48 @@
-var atom = require('./atom');
 
-var combinator = require('./combinator');
+import * as atom from './atom';
+import * as combinator from './combinator';
+import states from './state';
+import * as parsec from './parsec';
+import * as model from './model';
+import * as text from './text';
 
-var state = require('./state.js');
 
-var parsec = require('./parsec.js');
+export default class jsparsec {
 
-var model = require('./model.js');
+	constructor() {
+		this._name = 'jsparsec';
+		this._parsec = parsec;
+		this._model = model;
+		this._text = text;
+		this._combinator = combinator;
+		this._atom = atom;
+	}
+	get name() {
+		return this._name;
+	}
 
-var text = require('./text.js');
+	parsec(){
+		return this._parsec;
+	}
 
-exports.atom = atom;
+	model(){
+		return this._model;
+	}
 
-exports.combinator = combinator;
+	text(){
+		return this._text;
+	}
 
-exports.state = state;
+	state(str){
+		return new states(str);
+	}
 
-exports.getparsec = parsec;
+	combinator(){
+		return this._combinator;
+	}
 
-exports.model = model;
+	atom(){
+		return this._atom;
+	}
 
-exports.text = text;
+}

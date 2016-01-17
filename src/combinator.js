@@ -1,5 +1,7 @@
-var parsec = require('./parsec.js');
-var atom = require('./atom.js');
+import { atom } from './atom';
+import { parsec } from './parsec';
+
+
 
 var attempt = function(p) {
     var fun = function(state){
@@ -191,6 +193,7 @@ var sep1 = function(p, s) {
     return fun;
 };
 
+
 exports.attempt = attempt;
 exports.otherwise  = otherwise;
 exports.choice = choice;
@@ -203,3 +206,4 @@ exports.skip = skip;
 exports.skip1 = skip1;
 exports.sep = sep;
 exports.sep1 = sep1;
+

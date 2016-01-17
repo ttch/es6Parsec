@@ -1,3 +1,51 @@
+
+export default class states{
+    constructor (st){
+        this.st = st;
+        this._position = 0;
+        this._tran = -1;
+    }
+
+    next(){
+        var item;
+        if (this._position >= 0 && this._position < this.st.length) {
+            item = this.st[this._position];
+            this._position++;
+        }else {
+            item = null;
+        }
+
+        return item; 
+    }
+
+    pos(){
+        return this._position;
+    }
+    
+    nextBy (pred) {
+        if (this._position >= 0 && this._position < this.st.length) {
+            var item = this.st[this._position];
+            if (pred(item)) {
+                return item;
+            } else{
+                throw new Error("predicate failed");
+            }
+        } else {
+            return -1;
+        }
+    };
+
+    seekTo (to) {
+        if (to >= 0 && to < this.st.length) {
+            this._position = to;
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+}
+/*
 module.exports = function(states){
     if(states == null){
         return null;
@@ -61,3 +109,4 @@ module.exports = function(states){
     };
 
 }
+*/
