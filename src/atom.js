@@ -7,7 +7,7 @@ export default class atom{
     }
 
     eq(x){
-        var fun = function(state){
+        const fun = (state)=>{
             if (state.next() === x) {
                 return x;
             }else {
@@ -20,7 +20,7 @@ export default class atom{
         return fun;
     }
     ne(x){
-        var fun = function(state){
+        const fun = (state)=>{
             if (state.next() === x) {
                 return x;
             }else {
@@ -33,7 +33,7 @@ export default class atom{
         return fun;
     }
     one(){
-        var fun = function(state){
+        const fun = (state)=>{
             var result = state.next();
             if (result instanceof Error){
                 throw null;
@@ -47,7 +47,7 @@ export default class atom{
     }
 
     oneOf(...states){
-        var fun = function(state){
+        const fun = (state)=>{
             var data = state.next();
             for(var val of states){
                 if (val === data) {
@@ -63,8 +63,7 @@ export default class atom{
     }
 
     noneOf(...states){
-
-        var fun = function(state){
+        const fun = (state)=>{
             var data = state.next();
             for(var val of states){
                 if (val === data) {
@@ -79,14 +78,14 @@ export default class atom{
         return fun; 
     }
     pack(element){
-        var fun = function() {
+        const fun = () =>{
             return element;
         };
         new parsec(fun);
         return fun;
     }
     fail(description){
-        var fun = function(state){
+        const fun = (state)=>{
             var err = Error(description);
             err.pos = state.pos() - 1;
             throw err;
