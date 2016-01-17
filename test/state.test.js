@@ -47,4 +47,16 @@ describe('state',function (){
             expect(st.pos()).to.be.equal(0);
         });
     });
+
+    describe('trans test',function(){
+        it('trans test suite',function(){
+            var st = jsParsec.state('abc');
+            var i = st.begin();
+            st.next();
+            expect(st.pos()).to.be.equal(1);
+            st.rollBack(i);
+            expect(st.pos()).to.be.equal(0);
+
+        });
+    });
 });
