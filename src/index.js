@@ -1,8 +1,8 @@
 
-import * as atom from './atom';
+import atom from './atom';
 import * as combinator from './combinator';
 import states from './state';
-import * as parsec from './parsec';
+import parsec from './parsec';
 import * as model from './model';
 import * as text from './text';
 
@@ -11,18 +11,16 @@ export default class jsparsec {
 
 	constructor() {
 		this._name = 'jsparsec';
-		this._parsec = parsec;
 		this._model = model;
 		this._text = text;
 		this._combinator = combinator;
-		this._atom = atom;
 	}
 	get name() {
 		return this._name;
 	}
 
-	parsec(){
-		return this._parsec;
+	parsec(p){
+		return new parsec(p)
 	}
 
 	model(){
@@ -42,7 +40,7 @@ export default class jsparsec {
 	}
 
 	atom(){
-		return this._atom;
+		return new atom();
 	}
 
 }

@@ -1,3 +1,5 @@
-exports.Result = function (result) {
-    
+
+
+export var Result = function (result) {
+
 }

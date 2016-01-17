@@ -1,4 +1,39 @@
  
+export default class parsec{
+    constructor (parser){
+        parser = {
+            bind(handle){
+                var item = function(state){
+                    var val = parser(state);
+                    var re =  handle(val,state);
+                    return re;
+                }
+                new parsec(item);
+                return item;
+            },
+            then(handle){
+                var item = function(state){
+                    parser(state);
+                    return handle(state);
+                };
+                new parsec(item);
+                return item;
+            },
+            over(tail){
+                var item = function(state){
+                    var val = parser(state);
+                    tail(state);
+                    return val;
+                };
+                new parsec(item);
+                return item;
+            }
+        }
+    }
+}
+
+/*
+
  export function parsec(parser){
         if (parser == null) {
             parser = new Object();
@@ -31,3 +66,4 @@
         };
         return parser;
     }
+*/
