@@ -46,12 +46,11 @@ export default class atom{
         return fun;
     }
 
-    oneOf(){
-        var states = arguments;
+    oneOf(...states){
         var fun = function(state){
             var data = state.next();
-            for(var index in states){
-                if (states[index] === data) {
+            for(var val of states){
+                if (val === data) {
                     return data;
                 }
             }
@@ -63,12 +62,12 @@ export default class atom{
         return fun;
     }
 
-    noneOf(){
-        var states = arguments;
+    noneOf(...states){
+
         var fun = function(state){
             var data = state.next();
-            for(var index in states){
-                if (states[index] === data) {
+            for(var val of states){
+                if (val === data) {
                     var err = Error('expect none of ' + states);
                     err.pos = state.pos;
                     throw err;
