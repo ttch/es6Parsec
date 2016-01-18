@@ -1,7 +1,7 @@
  
 export default class parsec{
     constructor (parser){
-        parser = {
+        var parser = {
             bind(handle){
                 var item = (state)=>{
                     var val = parser(state);
@@ -29,5 +29,6 @@ export default class parsec{
                 return item;
             }
         }
+        return parser;
     }
 }

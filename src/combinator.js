@@ -1,209 +1,210 @@
-import { atom } from './atom';
-import { parsec } from './parsec';
+
+import parsec from 'parsec'
+import atom from 'atom'
 
 
-
-var attempt = function(p) {
-    var fun = function(state){
-        var result;
-        var index = state.pos();
-        var tran = state.begin();
-        try{
-            result = p(state);
-        } catch (err){
-            state.rollBack(tran);
-            throw err;
-        }
-        state.commit(tran);
-        return result;
-    };
-    parsec(fun);
-    return fun;
-}
-
-
-var between = function(parseren, close, p) {
-    var fun = function(state){
-        parseren(state);
-        var result = p(state);
-        close(state);
-        return result;
-    };
-    parsec(fun);
-    return fun;
-}
-
-//either.or();
-var either = function(p1,p2) {
-    var fun = function (state) {
-        // this.or = xxxxx 这样写外面就拿不到 or 这个属性?
-        var result1;
-        try{
-            result1 = p1(state);
-        }catch(err){
-            var result2 = p2(state);
-            return result2;
-        }
-        return result1;
-    };
-    fun.or = function(p3){
-        return either(either(p1,p2),p3);
-    };
-    parsec(fun);
-    return fun;
-}
-
-
-var otherwise = function(p,description) {
-    var fun = function(state){
-        var ei = either(p,atom.fail(description));
-        return ei(state);
-    };
-    parsec(fun);
-    return fun;
-}
-
-
-var choice = function (){
-    var parsers = arguments;
-    var fun = function(state){
-        var result = null;
-        for(var index in parsers){
+    export var attempt = (p)=>{
+        var fun = (state)=>{
+            var result;
+            var index = state.pos();
+            var tran = state.begin();
             try{
-                result = parsers[index](state);
-                break;
-            }catch(err){
-                continue;
+                result = p(state);
+            } catch (err){
+                state.rollBack(tran);
+                throw err;
             }
-        }
-        if (result == null) {
-            var err = Error('');
-            err.pos = state.pos();
-            throw err;
-        }
-        return result;
-    };
-    parsec(fun);
-    return fun;
-};
+            state.commit(tran);
+            return result;
+        };
+        new parsec(fun);
+        return fun;
+    }
+
+    export var between = (open, close, p)=>{
+        var fun = (state)=>{
+            open(state);
+            var result = p(state);
+            close(state);
+            return result;
+        };
+        new parsec(fun);
+        return fun;
+    }
 
 
-var many = function(p) {
-    var fun = function(state){
-        var ma = either(many1(attempt(p)),atom.pack(Array(0)));
-        var re = ma(state);
-        return re;
-    };
-    parsec(fun);
-    return fun;
-};
-
-
-var many1 = function(p) {
-    //这里P执行出错了 就直接抛出去
-    var fun = p.bind(function(x,state){
-        var arr = new Array();
-        arr.push(x);
-        while(true)
-        {
-            var at = attempt(p);
+    export var either = (x,y)=>{
+        var fun = (state) =>{
+            // this.or = xxxxx 这样写外面就拿不到 or 这个属性?
+            var result1;
             try{
-                var val = at(state);
-                arr.push(val);
+                result1 = x(state);
             }catch(err){
+                var result2 = y(state);
+                return result2;
+            }
+            return result1;
+        };
+        fun.or = function(z){
+            return either(either(x,y),z);
+        };
+        new parsec(fun);
+        return fun;
+    }
+    export var otherwise=(p,description)=>{
+        var fun = function(state){
+            var ei = either(p,(new atom).fail(description));
+            return ei(state);
+        };
+        new parsec(fun);
+        return fun;
+    }
+    export var manyTill=(parser,end)=>{
+        var fun = (state)=>{
+            var re = new Array();
+            while (true) {
+                try{
+                    re.push(parser(state));
+                } catch (err){
+                    end(state)
+                };
+                return re
+            }
+        };
+        new parsec(fun);
+        return fun;
+    }
+
+
+    export var many = (p) =>{
+
+        var fun = (state) =>{
+            var arr = new Array();
+
+            try{
+                while (true) {
+                    arr.push(p(state));
+                }
+            }catch (err){
                 return arr;
             }
         }
-        return arr;
-    });
-    parsec(fun);
-    return fun;
-};
+        new parsec(fun);
+        return fun;
+    }
 
 
+    export var many1 = (p) => {
 
-var manyTill = function(parser,end) {
-    var fun = function(state){
-        var re = new Array();
-        var e = attempt(end);
-        while (true) {
+        var fun = (state) =>{
+            var arr = new Array();
+            arr.push(p(state));
             try{
-                e(state)
-                return re
-            } catch (err){
-                re.push(parser(state))
-            };
-        }
-    };
-    parsec(fun);
-    return fun;
-};
-
-var skip1 = function(p) {
-    var fun = p.bind(function(x,state){
-        var arr = new Array();
-        while(true)
-        {
-            try{
-                var val = p(state);
-            }catch(err){
-                return;
+                while (true) {
+                    arr.push(p(state));
+                }
+            }catch (err){
+                return arr;
             }
         }
-    });
-    parsec(fun);
-    return fun;
-};
+        new parsec(fun);
+        return fun;
+    }
 
 
-var skip = function(p) {
-    var fun = function(state){
-        var sk = either(skip1(attempt(p)),atom.pack(Array(0)));
-        var re = sk(state);
-        return re;
+    export var skip1 = (p) => {
+        var fun = (state)=>{
+            p(state);
+            
+            while(true)
+            {
+                try{
+                    var att = attempt(p);
+                    var val = att(state);
+                }catch(err){
+                    return val;
+                }
+            }
+        };
+        new parsec(fun);
+        return fun;
     };
-    parsec(fun);
-    return fun;
-};
 
-
-var sep = function(p, s) {
-    var fun = function(state){
-        var parser = either(sep1(p, s), atom.pack(new Array(0)));
-        var re = parser(state);
-        return re;
+    export var skip = (p) =>{
+        var fun =(state)=>{
+            while(true)
+            {
+                try{
+                    var att = attempt(p);
+                    var val = att(state);
+                }catch(err){
+                    return val;
+                }
+            }
+        };
+        new parsec(fun);
+        return fun;
     };
-    parsec(fun);
-    return fun;
-};
 
+    export var choice = (...ps)=>{
+        var parsers = arguments;
+        var fun = function(state){
+            var result = null;
+            for(var p of ps){
+                try{
+                    result = p(state);
+                    break;
+                }catch(err){
+                    continue;
+                }
+            }
+            if (result == null) {
+                var err = Error('');
+                err.pos = state.pos();
+                throw err;
+            }
+            return result;
+        };
+        new parsec(fun);
+        return fun;
+    };
 
-var sep1 = function(p, s) {
-    var fun = function(state){
-        var parser = p.bind(function(x,state){
-            var temp = new Array();
-            temp.push(x);
-            var re = temp.concat(many(s.then(p))(state));
+    export var sep =(p, s)=> {
+        var fun = function(state){
+            var re = new Array();
+            try{
+                re.push(p(state));
+                while(true){
+                    s(state);
+                    re.push(p(state));
+                }
+            }catch(err){
+                return re;
+            }
+
             return re;
-        });
-        var result = parser(state);
-        return result;
+        };
+        new parsec(fun);
+        return fun;
     };
-    parsec(fun);
-    return fun;
-};
 
 
-exports.attempt = attempt;
-exports.otherwise  = otherwise;
-exports.choice = choice;
-exports.either = either;
-exports.between = between;
-exports.many = many;
-exports.many1 = many1;
-exports.manyTill = manyTill;
-exports.skip = skip;
-exports.skip1 = skip1;
-exports.sep = sep;
-exports.sep1 = sep1;
+    export var sep1 = (p, s) =>{
+        var fun = function(state){
+            var re = new Array();
 
+            re.push(p(state));
+            while(true){
+                try{
+                    s(state);
+                    re.push(p(state));
+                }catch(err){
+                    return re;
+                }
+            }
+
+            return re;
+        };
+        new parsec(fun);
+        return fun;
+    };

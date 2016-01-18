@@ -11,6 +11,7 @@ var jsParsec = new parsec();
 describe('parsec',function (){
     describe('eq',function () {
         it("eq test",function(){
+        	
             var st = jsParsec.state('a');
             var p = jsParsec.atom().eq('a');
             expect(p(st)).to.be.equal('a');

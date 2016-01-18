@@ -13,7 +13,6 @@ export default class jsparsec {
 		this._name = 'jsparsec';
 		this._model = model;
 		this._text = text;
-		this._combinator = combinator;
 	}
 	get name() {
 		return this._name;
@@ -36,7 +35,7 @@ export default class jsparsec {
 	}
 
 	combinator(){
-		return this._combinator;
+		return combinator;
 	}
 
 	atom(){

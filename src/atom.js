@@ -11,7 +11,7 @@ export default class atom{
             if (state.next() === x) {
                 return x;
             }else {
-                var err = Error("expecting a value equal" + x);
+                var err = Error("expecting a value equal " + x);
                 err.pos = state.pos() - 1;
                 throw err;
             }
@@ -21,12 +21,13 @@ export default class atom{
     }
     ne(x){
         const fun = (state)=>{
-            if (state.next() === x) {
-                return x;
-            }else {
-                var err = Error("expecting a value not equal" + x);
+            var data = state.next()
+            if (data === x) {
+                var err = Error('expecting a value not equal ' + x);
                 err.pos = state.pos() - 1;
                 throw err;
+            }else{
+                return data
             }
         }
         new parsec(fun);
