@@ -4,6 +4,7 @@ import parsec from '../lib/parsec.js';
 chai.expect();
 
 const expect = chai.expect;
+var assert = chai.assert;
 
 var jsParsec = new parsec();
 var combinator = jsParsec.combinator();
@@ -44,12 +45,11 @@ describe('parsec',function (){
             var ne = atom.ne('b');
             var no = atom.noneOf('q','w','e','r','t','b','c');
             var or = combinator.either(eq,ne).or(no);
-            //todo asert
-            /*
+
             assert.throw(function(){
                 or(state);
             },Error);
-            */
+
             state = new jsParsec.state('abd');
             expect(or(state)).to.be.equal('d');
         });
@@ -68,8 +68,9 @@ describe('parsec',function (){
             var a = atom.eq('a');
             var na = atom.ne('a');
             var mat = combinator.manyTill(a,na);
-            mat(state);
-           // assert.equal(10,state.pos());
+            console.log( mat(state) );
+            console.log(state.pos())
+            assert.equal(9,state.pos());
         });
         
         it('many',function(){
@@ -87,13 +88,13 @@ describe('parsec',function (){
             var ma = combinator.many1(eq);
             var arr = ma(state);
             expect(arr.length).to.be.equal(3);
-/*
+
             state = new jsParsec.state('baaaaab');
             var ma1 = combinator.many1(eq);
             assert.throw(function () {
                 ma1(state);
             },Error);
-*/
+
         });
         it('skip1',function(){
             var state = new jsParsec.state('aaaaaaaaab');
@@ -101,14 +102,13 @@ describe('parsec',function (){
             var skip1 = combinator.skip1(eq);
             var m = skip1(state);
             expect(state.pos()).to.be.equal(9);
-            //assert.equal(9,state.pos());
-            /*
+
             state = new jsParsec.state('baaaaab');
             var ma1 = combinator.many1(eq);
             assert.throw(function () {
                 ma1(state);
             },Error);
-            */
+
         });
         it('skip',function(){
             var state = new jsParsec.state('aaaaaaaaab');
@@ -144,7 +144,6 @@ describe('parsec',function (){
             var re = sep(state);
             expect(re.length).to.be.equal(4);
         });
-
     });
 
 

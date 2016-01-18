@@ -64,11 +64,11 @@ import atom from 'atom'
             var re = new Array();
             while (true) {
                 try{
-                    re.push(parser(state));
-                } catch (err){
                     end(state)
+                    return re
+                } catch (err){
+                    re.push(parser(state));
                 };
-                return re
             }
         };
         new parsec(fun);
