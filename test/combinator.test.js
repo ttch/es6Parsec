@@ -68,8 +68,7 @@ describe('parsec',function (){
             var a = atom.eq('a');
             var na = atom.ne('a');
             var mat = combinator.manyTill(a,na);
-            console.log( mat(state) );
-            console.log(state.pos())
+            mat(state)
             assert.equal(9,state.pos());
         });
         

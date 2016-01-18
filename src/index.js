@@ -27,7 +27,7 @@ export default class jsparsec {
 	}
 
 	text(){
-		return this._text;
+		return text;
 	}
 
 	state(str){

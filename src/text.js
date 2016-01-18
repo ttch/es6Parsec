@@ -1,30 +1,75 @@
-var atom = require('./atom.js');
-var combinator = require('./combinator.js');
-var atom = require('./atom.js')
-var parsec = require('./parsec.js');
+import parsec from 'parsec'
+import atom from 'atom'
+import * as combinator from 'combinator'
 
-var eq = atom.eq;
+
+
+var eq = (new atom).eq;
 var either = combinator.either;
 var attempt = combinator.attempt;
-var ne = atom.ne;
+var ne = (new atom).ne;
 
-var charIn = function(string){
-    var fun = function(state){
+
+export var space =()=>{
+    var ei = eq(' ');
+    return ei;
+};
+
+
+export var charIn =(str)=>{
+    var fun = (state)=>{
         var val = state.next();
-        for(var index in string){
-            if(string[index] === val){
+        for(var index in str){
+            if(str[index] === val){
                 return val;
             }
         };
-        var err = Error('not a char of ' + string);
+        var err = Error('not a char of ' + str);
         err.pos = state.pos() - 1;
         throw err;
     };
-    parsec(fun);
+    new parsec(fun);
     return fun;
 };
 
-var charNone = function(string){
+
+
+export var Text = (str)=>{
+    var fun = (state)=>{
+        var arr = new Array();
+
+        for(var index in str){
+            var val = state.next();
+            arr.push(val);
+            if (val != str[index] && index == 0) {
+                var fail = (new atom()).fail('not match')
+                fail(state);
+            };
+        }
+
+        return arr.join('');
+    };
+    new parsec(fun);
+    return fun;
+};
+
+
+export var newLine = ()=>{
+    var fun = (state)=>{
+        //参数顺序千万不要替换，以后改改看看咋合适
+        var ei = either(attempt(Text('\n\r')),Text('\n'));
+        return ei(state);
+    }
+    new parsec(fun);
+    return fun;
+};
+
+export var whiteSpace = ()=>{
+    var eq = charIn(' \t');
+    return eq;
+};
+
+export var charNone = function(string){
     var fun = function(state){
         var val = state.next();
         for(var c in string){
@@ -39,43 +84,27 @@ var charNone = function(string){
     parsec(fun);
 };
 
-var digit = function() {
+
+export var digit = function() {
     var fun = charIn('0123456789');
     return fun;
 };
 
-var letter = function(){
+export var letter = function(){
     var fun = charIn('abcdefghijklmnopqrstuvwxyz');
     return fun;
 };
 
-var alphaNumber = function(){
+export var alphaNumber = function(){
     var fun = either(attempt(digit()),letter());
     return fun;
 };
 
-var string = function(str){
-    var fun = function(state){
-        var arr = new Array();
-        for(var index in str){
-            var val = state.next();
-            arr.push(val);
-            if (val != str[index] && index == 0) {
-                var fail = atom.fail('not match')
-                fail(state);
-            };
-        }
-        return arr.join('');
-    };
-    parsec(fun);
-    return fun;
-};
 
-
-var uInt = function(){
+export var uInt = function(){
     var fun = function(state){
         var ma = combinator.many1(digit()).bind(function(arr,state){
-            var at = combinator.attempt(atom.ne('.'));
+            var at = attempt(atom.ne('.'));
             at(state);
             return arr;
         });
@@ -89,7 +118,7 @@ var uInt = function(){
         }
         return re.join('');
     };
-    parsec(fun);
+    new parsec(fun);
     return fun;
 };
 
@@ -107,7 +136,7 @@ function negtive(state) {
 
 
 
-var Int = function(){
+export var Int = function(){
     var fun = function(state){
         var arr = new Array();
         arr.push(negtive(state));
@@ -115,12 +144,12 @@ var Int = function(){
         var re = arr.concat(ui(state));
         return re.join('');
     };
-    parsec(fun);
+    new parsec(fun);
     return fun;
 };
 
-
-var uFloat = function(){
+/*
+export var uFloat = function(){
     var fun = function (state) {
         var integer = combinator.many(digit());
         var pot = eq('.');
@@ -133,12 +162,12 @@ var uFloat = function(){
         arr = arr.concat(deci(state));
         return arr.join('');
     };
-    parsec(fun);
+    new parsec(fun);
     return fun;
 };
 
 
-var Float = function(){
+export var Float = function(){
     var fun = function(state){
         var arr = new Array();
         arr.push(negtive(state));
@@ -146,41 +175,7 @@ var Float = function(){
         var re = arr.concat(uf(state));
         return re.join('');
     };
-    parsec(fun);
+    new parsec(fun);
     return fun;
 };
-
-
-var newLine = function(){
-    var fun = function(state){
-        var ei =either(attempt(eq('\n')),string('\r\n'));
-        return ei(state);
-    }
-    parsec(fun);
-    return fun;
-};
-
-var whiteSpace = function(){
-    var eq = charIn(' \t');
-    return eq;
-};
-
-var space = function(){
-    var ei = eq(' ');
-    return ei;
-};
-
-
-exports.charIn = charIn;
-exports.charNone = charNone;
-exports.digit = digit;
-exports.letter = letter;
-exports.alphaNumber = alphaNumber;
-exports.string = string;
-exports.uInt = uInt;
-exports.Int = Int;
-exports.uFloat = uFloat;
-exports.Float = Float;
-exports.newLine = newLine;
-exports.whiteSpace = whiteSpace;
-exports.space = space;
+*/
