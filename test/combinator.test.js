@@ -14,7 +14,6 @@ var atom = jsParsec.atom();
 describe('parsec',function (){
     describe('combinator',function () {
         it("attempt test",function(){
-        	
             var state = jsParsec.state('a');
             var ne = atom.ne('a');
             var attempt = combinator.attempt(ne);
@@ -29,7 +28,6 @@ describe('parsec',function (){
             var no = atom.noneOf('q','w','e','r','t','b','c');
             var between = combinator.between(eq, no, ne);
             expect(between(state)).to.be.equal('b');
-
         });
         it('either',function(){
             var state = jsParsec.state('aac');
@@ -63,15 +61,6 @@ describe('parsec',function (){
                 expect(err.message).to.be.equal("the first operator is fail , so sad");
             }
         });
-        it('many till',function(){
-            var state = new jsParsec.state('aaaaaaaab');
-            var a = atom.eq('a');
-            var na = atom.ne('a');
-            var mat = combinator.manyTill(a,na);
-            mat(state)
-            assert.equal(9,state.pos());
-        });
-        
         it('many',function(){
             var state = new jsParsec.state('aaab');
             var equal = atom.eq('a');

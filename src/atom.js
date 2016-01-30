@@ -50,10 +50,8 @@ export default class atom{
     oneOf(...states){
         const fun = (state)=>{
             var data = state.next();
-            for(var val of states){
-                if (val === data) {
-                    return data;
-                }
+            if ( states.includes(data) ){
+                return data;
             }
             var err = Error('expect one of' + states);
             err.pos = state.pos();
@@ -66,12 +64,10 @@ export default class atom{
     noneOf(...states){
         const fun = (state)=>{
             var data = state.next();
-            for(var val of states){
-                if (val === data) {
+            if ( states.includes(data) ){
                     var err = Error('expect none of ' + states);
                     err.pos = state.pos;
                     throw err;
-                }
             }
             return data;
         };

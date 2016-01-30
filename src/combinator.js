@@ -3,7 +3,7 @@ import parsec from 'parsec'
 import atom from 'atom'
 
 
-    export var attempt = (p)=>{
+    export var Try = (p)=>{
         var fun = (state)=>{
             var result;
             var index = state.pos();
@@ -59,21 +59,6 @@ import atom from 'atom'
         new parsec(fun);
         return fun;
     }
-    export var manyTill=(parser,end)=>{
-        var fun = (state)=>{
-            var re = new Array();
-            while (true) {
-                try{
-                    end(state)
-                    return re
-                } catch (err){
-                    re.push(parser(state));
-                };
-            }
-        };
-        new parsec(fun);
-        return fun;
-    }
 
 
     export var many = (p) =>{
@@ -119,7 +104,7 @@ import atom from 'atom'
             while(true)
             {
                 try{
-                    var att = attempt(p);
+                    var att = Try(p);
                     var val = att(state);
                 }catch(err){
                     return val;
@@ -135,7 +120,7 @@ import atom from 'atom'
             while(true)
             {
                 try{
-                    var att = attempt(p);
+                    var att = Try(p);
                     var val = att(state);
                 }catch(err){
                     return val;

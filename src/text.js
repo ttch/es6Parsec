@@ -6,7 +6,7 @@ import * as combinator from 'combinator'
 
 var eq = (new atom).eq;
 var either = combinator.either;
-var attempt = combinator.attempt;
+var Try = combinator.Try;
 var ne = (new atom).ne;
 
 
@@ -57,7 +57,7 @@ export var Text = (str)=>{
 export var newLine = ()=>{
     var fun = (state)=>{
         //参数顺序千万不要替换，以后改改看看咋合适
-        var ei = either(attempt(Text('\n\r')),Text('\n'));
+        var ei = either(Try(Text('\n\r')),Text('\n'));
         return ei(state);
     }
     new parsec(fun);
@@ -69,8 +69,8 @@ export var whiteSpace = ()=>{
     return eq;
 };
 
-export var charNone = function(string){
-    var fun = function(state){
+export var charNone =(string)=>{
+    var fun = (state)=>{
         var val = state.next();
         for(var c in string){
             if(c === val){
@@ -85,25 +85,25 @@ export var charNone = function(string){
 };
 
 
-export var digit = function() {
+export var digit = ()) => {
     var fun = charIn('0123456789');
     return fun;
 };
 
-export var letter = function(){
+export var letter = ()=>{
     var fun = charIn('abcdefghijklmnopqrstuvwxyz');
     return fun;
 };
 
-export var alphaNumber = function(){
+export var alphaNumber = ()=>{
     var fun = either(attempt(digit()),letter());
     return fun;
 };
 
 
-export var uInt = function(){
-    var fun = function(state){
-        var ma = combinator.many1(digit()).bind(function(arr,state){
+export var uInt = ()=>{
+    var fun = (state)=>{
+        var ma = combinator.many1(digit()).bind((arr,state)=>{
             var at = attempt(atom.ne('.'));
             at(state);
             return arr;
@@ -136,8 +136,8 @@ function negtive(state) {
 
 
 
-export var Int = function(){
-    var fun = function(state){
+export var Int = ()=>{
+    var fun = (state)=>{
         var arr = new Array();
         arr.push(negtive(state));
         var ui = uInt();
