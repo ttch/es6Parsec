@@ -1,17 +1,15 @@
 import parsec from 'parsec'
-import atom from 'atom'
+import * as atom from 'atom'
 import * as combinator from 'combinator'
 
 
 
-var eq = (new atom).eq;
 var either = combinator.either;
 var Try = combinator.Try;
-var ne = (new atom).ne;
 
 
 export var space =()=>{
-    var ei = eq(' ');
+    var ei = atom.eq(' ');
     return ei;
 };
 
@@ -42,7 +40,7 @@ export var Text = (str)=>{
             var val = state.next();
             arr.push(val);
             if (val != str[index] && index == 0) {
-                var fail = (new atom()).fail('not match')
+                var fail = fail('not match')
                 fail(state);
             };
         }
@@ -85,7 +83,7 @@ export var charNone =(string)=>{
 };
 
 
-export var digit = ()) => {
+export var digit = () => {
     var fun = charIn('0123456789');
     return fun;
 };
@@ -96,7 +94,7 @@ export var letter = ()=>{
 };
 
 export var alphaNumber = ()=>{
-    var fun = either(attempt(digit()),letter());
+    var fun = either(Try(digit()),letter());
     return fun;
 };
 
@@ -104,7 +102,7 @@ export var alphaNumber = ()=>{
 export var uInt = ()=>{
     var fun = (state)=>{
         var ma = combinator.many1(digit()).bind((arr,state)=>{
-            var at = attempt(atom.ne('.'));
+            var at = Try(atom.ne('.'));
             at(state);
             return arr;
         });
@@ -112,6 +110,8 @@ export var uInt = ()=>{
         try{
             re = ma(state)
         }catch(err){
+            console.log(err)
+            console.log(atom.ne('.'))
             var err = Error('not a uInt');
             err.pos = state.pos() - 1;
             throw err;
@@ -124,7 +124,7 @@ export var uInt = ()=>{
 
 
 function negtive(state) {
-    var neg = combinator.attempt(eq('-'));
+    var neg = combinator.Try(atom.eq('-'));
     var val;
     try{
         val = neg(state);

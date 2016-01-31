@@ -104,9 +104,9 @@ describe('parsec',function (){
         });
 		*/
         it('int',function(){
-            var state = new jsParsec.state('-123');
+            var state = new jsParsec.state('123');
             var Int = text.Int();
-            assert.equal('-123',Int(state));
+            assert.equal('123',Int(state));
 
             state = new jsParsec.state('123');
             assert.equal('123',Int(state));

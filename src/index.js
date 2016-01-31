@@ -1,5 +1,5 @@
 
-import atom from './atom';
+import * as atom from './atom';
 import * as combinator from './combinator';
 import states from './state';
 import parsec from './parsec';
@@ -39,7 +39,7 @@ export default class jsparsec {
 	}
 
 	atom(){
-		return new atom();
+		return atom;
 	}
 
 }

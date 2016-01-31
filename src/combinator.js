@@ -1,6 +1,6 @@
 
 import parsec from 'parsec'
-import atom from 'atom'
+import * as atom from 'atom'
 
 
     export var Try = (p)=>{
@@ -53,7 +53,7 @@ import atom from 'atom'
     }
     export var otherwise=(p,description)=>{
         var fun = function(state){
-            var ei = either(p,(new atom).fail(description));
+            var ei = either(p,atom.fail(description));
             return ei(state);
         };
         new parsec(fun);

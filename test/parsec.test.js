@@ -19,7 +19,7 @@ describe('parsec',function (){
         it('one',function(){
             var expr = (st = 
                 () => psc.state('abc')) =>
-                        psc.atom().one()(st()
+                        psc.atom().one('a')(st()
             );
 
             expect(expr()).to.be.equal('a');
@@ -27,12 +27,13 @@ describe('parsec',function (){
         it('one of',function(){
             var state = psc.state('abc');
             var oneOf = psc.atom().oneOf('q','w','e','r','t','a');
+            
             var re = oneOf(state);
             expect(re).to.be.equal('a');
         });
         it('none of',function(){
             var state = psc.state('abc');
-            var noneOf = psc.atom().noneOf(...['q','w','e','r','t','b']);
+            var noneOf = psc.atom().noneOf('q','w','e','r','t','b');
             var re = noneOf(state);
             expect(re).to.be.equal('a');
         });
@@ -44,6 +45,14 @@ describe('parsec',function (){
             var fail = psc.atom().fail();
             //todo
         });
+        it('parsec',function(){
+            var expr = (st = 
+                () => psc.state('abc')) =>
+                        psc.parsec( psc.atom().one('c') )
+                            .then( psc.atom().one('b') ) (st());
+            //todo
+        });
+
     });
 
 

@@ -13,10 +13,10 @@ var atom = jsParsec.atom();
 
 describe('parsec',function (){
     describe('combinator',function () {
-        it("attempt test",function(){
+        it("Try test",function(){
             var state = jsParsec.state('a');
             var ne = atom.ne('a');
-            var attempt = combinator.attempt(ne);
+            var Try = combinator.Try(ne);
             var prePos = state.pos();
             expect(state.pos()).to.be.equal(prePos);
 

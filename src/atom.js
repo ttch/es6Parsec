@@ -1,12 +1,7 @@
 ﻿import parsec from 'parsec'
 import * as model from 'model'
 
-
-export default class atom{
-    constructor(){
-    }
-
-    eq(x){
+export var eq = (x) =>{
         const fun = (state)=>{
             if (state.next() === x) {
                 return x;
@@ -19,7 +14,7 @@ export default class atom{
         new parsec(fun);
         return fun;
     }
-    ne(x){
+export var ne = (x)=>{
         const fun = (state)=>{
             var data = state.next()
             if (data === x) {
@@ -33,7 +28,7 @@ export default class atom{
         new parsec(fun);
         return fun;
     }
-    one(){
+export var one = ()=>{
         const fun = (state)=>{
             var result = state.next();
             if (result instanceof Error){
@@ -47,12 +42,19 @@ export default class atom{
         return fun;
     }
 
-    oneOf(...states){
-        const fun = (state)=>{
+export var oneOf = (...states)=>{
+        var fun = (state)=>{
             var data = state.next();
+            for(var key in states){
+                if (states[key] == data){
+                    return data;
+                }
+            }
+            /*
             if ( states.includes(data) ){
                 return data;
             }
+            */
             var err = Error('expect one of' + states);
             err.pos = state.pos();
             throw err;
@@ -61,27 +63,35 @@ export default class atom{
         return fun;
     }
 
-    noneOf(...states){
-        const fun = (state)=>{
+export var noneOf = (...states)=>{
+        var fun = (state)=>{
             var data = state.next();
+            for(var key in states){
+                if (states[key] == data){
+                    var err = Error('expect none of ' + states);
+                    err.pos = state.pos;
+                    throw err;
+                }
+            }
+            /*
             if ( states.includes(data) ){
                     var err = Error('expect none of ' + states);
                     err.pos = state.pos;
                     throw err;
             }
+            */
             return data;
         };
-        new parsec(fun);
         return fun; 
     }
-    pack(element){
+export var pack = (element)=>{
         const fun = () =>{
             return element;
         };
         new parsec(fun);
         return fun;
     }
-    fail(description){
+export var fail = (description)=>{
         const fun = (state)=>{
             var err = Error(description);
             err.pos = state.pos() - 1;
@@ -90,5 +100,3 @@ export default class atom{
         new parsec(fun);
         return fun;
     }
-}
-
