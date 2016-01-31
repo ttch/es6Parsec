@@ -12,7 +12,7 @@ import * as atom from 'atom'
                 result = p(state);
             } catch (err){
                 state.rollBack(tran);
-                throw err;
+                return null;
             }
             state.commit(tran);
             return result;
@@ -45,7 +45,7 @@ import * as atom from 'atom'
             }
             return result1;
         };
-        fun.or = function(z){
+        fun.or = (z)=>{
             return either(either(x,y),z);
         };
         new parsec(fun);
@@ -103,11 +103,8 @@ import * as atom from 'atom'
             
             while(true)
             {
-                try{
-                    var att = Try(p);
-                    var val = att(state);
-                }catch(err){
-                    return val;
+                if ( Try(p)(state) === null ){
+                    return null;
                 }
             }
         };
@@ -119,11 +116,8 @@ import * as atom from 'atom'
         var fun =(state)=>{
             while(true)
             {
-                try{
-                    var att = Try(p);
-                    var val = att(state);
-                }catch(err){
-                    return val;
+                if ( Try(p)(state) === null ){
+                    return null;
                 }
             }
         };

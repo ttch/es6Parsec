@@ -7,7 +7,8 @@ import * as model from './model';
 import * as text from './text';
 
 
-export default class jsparsec {
+
+class jsparsec {
 
 	constructor() {
 		this._name = 'jsparsec';
@@ -22,24 +23,18 @@ export default class jsparsec {
 		return new parsec(p)
 	}
 
-	model(){
-		return this._model;
-	}
-
-	text(){
-		return text;
-	}
-
 	state(str){
 		return new states(str);
 	}
 
-	combinator(){
-		return combinator;
-	}
-
-	atom(){
-		return atom;
-	}
-
 }
+
+export var a = atom;
+
+export var c = combinator;
+
+export var t = text;
+
+export var m = model;
+
+export var jp = jsparsec;
