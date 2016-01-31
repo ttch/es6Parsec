@@ -32,10 +32,16 @@ describe('parsec',function (){
             expect(re).to.be.equal('a');
         });
         it('none of',function(){
+            /*
             var state = psc.state('abc');
             var noneOf = psc.atom().noneOf('q','w','e','r','t','b');
             var re = noneOf(state);
-            expect(re).to.be.equal('a');
+            */
+
+            var expr = ( st = () => psc.state('abc') ) =>
+                psc.parsec( psc.atom().noneOf('q','w','e','r','t','b')) ( st() )
+
+            expect(expr()).to.be.equal('a');
         });
         it('pack',function(){
             var pack = psc.atom().pack();

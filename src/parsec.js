@@ -3,7 +3,6 @@ export default class parsec{
     constructor (parser){
         parser.then = (handle) =>{
             var item = (state)=>{
-                console.log(parser)
                 parser(state);
                 return handle(state);
             };
