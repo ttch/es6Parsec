@@ -110,8 +110,6 @@ export var uInt = ()=>{
         try{
             re = ma(state)
         }catch(err){
-            console.log(err)
-            console.log(atom.ne('.'))
             var err = Error('not a uInt');
             err.pos = state.pos() - 1;
             throw err;

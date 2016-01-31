@@ -50,7 +50,8 @@ describe('parsec',function (){
                 () => psc.state('abc')) =>
                         psc.parsec( psc.atom().one('c') )
                             .then( psc.atom().one('b') ) (st());
-            //todo
+
+            expect(expr()).to.be.equal('b');
         });
 
     });
