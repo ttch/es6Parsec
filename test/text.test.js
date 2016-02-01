@@ -85,25 +85,22 @@ describe('parsec',function (){
                 al(state);
             },Error);
         });
-        /*
+        
         it('uInt',function(){
-            var state = new jsParsec.state('12');
-            var uInt = text.uInt();
+            var state = psc.state('12');
+            var uInt = t.uInt();
             assert.equal('12',uInt(state));
 
 
-            state = new jsParsec.state('i love you');
+            state = psc.state('i love you');
             assert.throw(function(){
                 uInt(state);
             });
 
-
-            state = new jsParsec.state('12.3');
-            assert.throw(function(){
-                uInt(state);
-            },Error);
+            state = psc.state('12.3');
+            assert.equal('12',uInt(state));
         });
-		*/
+		
         it('int',function(){
             var state = psc.state('123');
             var Int = t.Int();

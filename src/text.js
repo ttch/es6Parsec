@@ -101,19 +101,9 @@ export var alphaNumber = ()=>{
 
 export var uInt = ()=>{
     var fun = (state)=>{
-        var ma = combinator.many1(digit()).bind((arr,state)=>{
-            var at = attempt(atom.ne('.'));
-            at(state);
-            return arr;
-        });
-        var re;
-        try{
-            re = ma(state)
-        }catch(err){
-            var err = Error('not a uInt');
-            err.pos = state.pos() - 1;
-            throw err;
-        }
+        var expr = (st)=>
+            combinator.many1(digit())(st);
+        var re = expr(state)
         return re.join('');
     };
     new parsec(fun);
