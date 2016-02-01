@@ -1,26 +1,28 @@
 import chai from 'chai';
-import {a,c,jp} from '../lib/parsec.js';
+import {a,c,p} from '../lib/parsec.js';
 
 chai.expect();
 
 const expect = chai.expect;
 var assert = chai.assert;
 
-var psc = new jp();
+var psc = new p();
 
 
 describe('parsec',function (){
     describe('combinator',function () {
-        it("Try test",function(){
+        it("attempt test",function(){
             var state = psc.state('a');
 
             var expr = (st) =>
-                    c.Try( a.ne('a') )(st);
+                    c.attempt( a.ne('a') )(st);
 
             var prePos = state.pos();
+            try{
+                expr(state);
+            }catch(e){
 
-            expr(state);
-
+            }
             expect(state.pos()).to.be.equal(prePos);
 
         });

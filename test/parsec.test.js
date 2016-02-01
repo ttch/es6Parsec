@@ -1,12 +1,12 @@
 import chai from 'chai';
-import {a,jp} from '../lib/parsec.js';
+import {a,p} from '../lib/parsec.js';
 
 
 chai.expect();
 
 const expect = chai.expect;
 
-var psc = new jp();
+var psc = new p();
 
 
 describe('parsec',function (){

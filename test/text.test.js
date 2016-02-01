@@ -1,56 +1,57 @@
 import chai from 'chai';
-import parsec from '../lib/parsec.js';
+import {a,c,t,p}  from '../lib/parsec.js';
 
 chai.expect();
 
 const expect = chai.expect;
 var assert = chai.assert;
 
-var jsParsec = new parsec();
-var combinator = jsParsec.combinator();
-var text = jsParsec.text();
+var psc = new p();
 
 
 describe('parsec',function (){
     describe('text',function () {
        it('space',function(){
-            var state = new jsParsec.state('\n \r\ni love you');
-            var sp = text.space();
+            var state = psc.state('\n \r\ni love you');
+            var sp = t.space();
+
             assert.throw(function(){
                 sp(state);
             },Error);
+
             assert.equal(' ',sp(state));
+
             assert.throw(function(){
                 sp(state);
             },Error);
         });
         it('new line',function(){
-            var state = new jsParsec.state('\n');
-            var nl = text.newLine();
+            var state = psc.state('\n');
+            var nl = t.newLine();
             assert.equal('\n',nl(state));
             // \n\r 算两个字符
-            var state1 = new jsParsec.state('\n\r');
+            var state1 = psc.state('\n\r');
             assert.equal("\n\r",nl(state1));
 
-            state = new jsParsec.state('i love you');
+            state = psc.state('i love you');
             assert.throw(function(){
                 nl(state);
             },Error);
         });
         it('white space',function(){
-            var state = new jsParsec.state(' \t');
-            var ws = text.whiteSpace();
+            var state = psc.state(' \t');
+            var ws = t.whiteSpace();
             assert.equal(' ',ws(state));
             assert.equal('\t',ws(state));
 
-            state = new jsParsec.state('i love you');
+            state = psc.state('i love you');
             assert.throw(function(){
                 ws(state);
             },Error);
         });
         it('Text',function(){
-            var str = text.Text('love');
-            var state = new jsParsec.state('love you');
+            var str = t.Text('love');
+            var state = psc.state('love you');
             var re = str(state);
             assert.equal('love',re);
 
@@ -60,24 +61,24 @@ describe('parsec',function (){
             },Error);
         });
         it('digit',function(){
-            var digit = text.digit();
-            var state = new jsParsec.state('a1');
+            var digit = t.digit();
+            var state = psc.state('a1');
             assert.throw(function(){
                 digit(state);
             },Error);
             digit(state);
         });
         it('letter',function(){
-            var letter = text.letter();
-            var state = new jsParsec.state('a1');
+            var letter = t.letter();
+            var state = psc.state('a1');
             assert.equal('a',letter(state));
             assert.throw(function(){
                 letter(state);
             },Error);
         });
         it('alphaNumber',function(){
-            var al = text.alphaNumber();
-            var state = new jsParsec.state('1a%');
+            var al = t.alphaNumber();
+            var state = psc.state('1a%');
             assert.equal('1',al(state));
             assert.equal('a',al(state));
             assert.throw(function(){
@@ -104,11 +105,11 @@ describe('parsec',function (){
         });
 		*/
         it('int',function(){
-            var state = new jsParsec.state('123');
-            var Int = text.Int();
+            var state = psc.state('123');
+            var Int = t.Int();
             assert.equal('123',Int(state));
 
-            state = new jsParsec.state('123');
+            state = psc.state('123');
             assert.equal('123',Int(state));
         });
         /*

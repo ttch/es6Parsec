@@ -5,7 +5,7 @@ import * as combinator from 'combinator'
 
 
 var either = combinator.either;
-var Try = combinator.Try;
+var attempt = combinator.attempt;
 
 
 export var space =()=>{
@@ -55,7 +55,7 @@ export var Text = (str)=>{
 export var newLine = ()=>{
     var fun = (state)=>{
         //参数顺序千万不要替换，以后改改看看咋合适
-        var ei = either(Try(Text('\n\r')),Text('\n'));
+        var ei = either(attempt(Text('\n\r')),Text('\n'));
         return ei(state);
     }
     new parsec(fun);
@@ -94,7 +94,7 @@ export var letter = ()=>{
 };
 
 export var alphaNumber = ()=>{
-    var fun = either(Try(digit()),letter());
+    var fun = either(attempt(digit()),letter());
     return fun;
 };
 
@@ -102,7 +102,7 @@ export var alphaNumber = ()=>{
 export var uInt = ()=>{
     var fun = (state)=>{
         var ma = combinator.many1(digit()).bind((arr,state)=>{
-            var at = Try(atom.ne('.'));
+            var at = attempt(atom.ne('.'));
             at(state);
             return arr;
         });
@@ -122,7 +122,7 @@ export var uInt = ()=>{
 
 
 function negtive(state) {
-    var neg = combinator.Try(atom.eq('-'));
+    var neg = combinator.attempt(atom.eq('-'));
     var val;
     try{
         val = neg(state);

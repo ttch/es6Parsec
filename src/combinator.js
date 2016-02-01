@@ -3,7 +3,7 @@ import parsec from 'parsec'
 import * as atom from 'atom'
 
 
-    export var Try = (p)=>{
+    export var attempt = (p)=>{
         var fun = (state)=>{
             var result;
             var index = state.pos();
@@ -12,7 +12,7 @@ import * as atom from 'atom'
                 result = p(state);
             } catch (err){
                 state.rollBack(tran);
-                return null;
+                throw err
             }
             state.commit(tran);
             return result;
@@ -103,7 +103,11 @@ import * as atom from 'atom'
             
             while(true)
             {
-                if ( Try(p)(state) === null ){
+                try{
+                    if ( attempt(p)(state) === null ){
+                        return null;
+                    }
+                }catch(e){
                     return null;
                 }
             }
@@ -116,7 +120,11 @@ import * as atom from 'atom'
         var fun =(state)=>{
             while(true)
             {
-                if ( Try(p)(state) === null ){
+                try{
+                    if ( attempt(p)(state) === null ){
+                        return null;
+                    }
+                }catch(e){
                     return null;
                 }
             }
